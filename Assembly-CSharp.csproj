@@ -46,13 +46,32 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\StateHandler.cs" />
-     <Compile Include="Assets\UIScene.cs" />
-     <Compile Include="Assets\getQuote.cs" />
-     <Compile Include="Assets\getText.cs" />
+     <Compile Include="Assets\font.cs" />
+     <Compile Include="Assets\graphicTemplate.cs" />
+     <Compile Include="Assets\scripts\StateHandler.cs" />
+     <Compile Include="Assets\scripts\UIScene.cs" />
+     <Compile Include="Assets\scripts\getQuote.cs" />
+     <Compile Include="Assets\scripts\getText.cs" />
+     <Compile Include="Assets\scripts\keepText.cs" />
+     <Compile Include="Assets\scripts\saveQuote.cs" />
+     <None Include="Assets\templates\BadBoy\fontcolor.txt" />
+     <None Include="Assets\templates\HeavensGate\fontcolor.txt" />
+     <None Include="Assets\templates\RustySport\fontcolor.txt" />
+     <None Include="Assets\templates\Reggae\fontcolor.txt" />
      <None Include="Assets\prefabs\lowermenu\firstname.txt" />
      <None Include="Assets\prefabs\lowermenu\quotes.txt" />
+     <None Include="Assets\templates\Atlantic\fontcolor.txt" />
+     <None Include="Assets\templates\Original\fontcolor.txt" />
+     <None Include="Assets\templates\DirtyLime\fontcolor.txt" />
      <None Include="Assets\prefabs\lowermenu\lastname.txt" />
+     <None Include="Assets\templates\Shadow\fontcolor.txt" />
+     <None Include="Assets\templates\BabyInPink\fontcolor.txt" />
+     <None Include="Assets\templates\50ShadesOfMetal\fontcolor.txt" />
+     <None Include="Assets\templates\BabyBlue\fontcolor.txt" />
+     <None Include="Assets\templates\CottonCandy\fontcolor.txt" />
+     <None Include="Assets\templates\RetroPink\fontcolor.txt" />
+     <None Include="Assets\templates\FairyForest\fontcolor.txt" />
+     <None Include="Assets\templates\Unicorn\fontcolor.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
