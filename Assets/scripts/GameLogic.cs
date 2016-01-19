@@ -5,13 +5,18 @@ using ImageVideoContactPicker;
 
 public class GameLogic : MonoBehaviour {
 
-	public Image userPicture;
+
 	public Texture2D debugTexture;
 
+	private Image sceneImage;
+	private RectTransform sceneImageRect;
+	private Image userPicture;
+	private Button button;
+	private GameObject GO;
+	private RectTransform userPicRect;
+	private RectTransform pictureBorderRect;
+
 	private float pictureYXRatio;
-	
-	public RectTransform userPicRect;
-	public RectTransform pictureBorderRect;
 	private Texture2D cropThisTex;
 	private float distanceChangeTouches;
 	private float TouchedPointsDistanceLastTime;
@@ -29,6 +34,30 @@ public class GameLogic : MonoBehaviour {
 	private float bordTopBorder;
 	private float newWidth;
 	private float newHeight;
+
+	void Start () {
+
+		GO = GameObject.Find ("CropPicture(Clone)");
+		userPicture = GameObject.Find ("UserPicture").GetComponent<Image>();
+		userPicRect = GameObject.Find ("UserPicture").GetComponent<RectTransform>();
+		pictureBorderRect = GameObject.Find ("PictureBorder").GetComponent<RectTransform> ();
+		button = GameObject.Find ("setPictureButton").GetComponent<Button> ();
+		sceneImage = GameObject.Find ("CamButton").GetComponent<Image> ();
+		sceneImageRect = GameObject.Find ("CamButton").GetComponent<RectTransform> ();
+
+
+		button.onClick.AddListener(() => CropPicture());
+
+		fitPictureBorderToScreen ();
+
+		if (Application.platform == RuntimePlatform.WindowsEditor) {
+			OnImageLoadDebugPC ();
+			FitPicToScreen(debugTexture);
+		} else if (Application.platform == RuntimePlatform.Android) {
+			AndroidPicker.BrowseImage();
+		}
+
+	}
 
 	void fitPictureBorderToScreen() {
 		float ratioX = (float) (Screen.width / pictureBorderRect.rect.width);
@@ -59,7 +88,6 @@ public class GameLogic : MonoBehaviour {
 			userPicRect.sizeDelta = new Vector2((float)(pictureBorderRect.rect.width), pictureWidth);
 		} else if (ratioX == ratioY) {
 			Debug.Log ("picture ratioX == ratioY");
-			Debug.Log("The same");
 		}
 	}
 
@@ -84,34 +112,13 @@ public class GameLogic : MonoBehaviour {
 
 		Sprite sprite = new Sprite();
 		sprite = Sprite.Create (destTex, new Rect (0, 0, width, height), new Vector2 (0.5f, 0.5f));
-		userPicture.overrideSprite = sprite;
-
-
-		userPicRect.sizeDelta = new Vector2(pictureBorderRect.rect.width, pictureBorderRect.rect.height);
-		userPicRect.transform.position = new Vector3 (Screen.width/2,Screen.height/2,0);
-
-
-
+		sceneImage.overrideSprite = sprite;
+		GO.SetActive (false);
 	}
 		
 	// Update is called once per frame
 	void Update () {
 		userPicScale ();
-	
-	}
-
-	void Start () {
-		fitPictureBorderToScreen ();
-
-		if (Application.platform == RuntimePlatform.WindowsEditor) {
-			OnImageLoadDebugPC ();
-			FitPicToScreen(debugTexture);
-		} else if (Application.platform == RuntimePlatform.Android) {
-			AndroidPicker.BrowseImage();
-		}
-
-		originalUserPicWidth = userPicRect.rect.width;
-		pictureRatio = (userPicRect.rect.height/ userPicRect.rect.width);
 	
 	}
 
@@ -174,6 +181,9 @@ public class GameLogic : MonoBehaviour {
 		Sprite sprite = new Sprite ();
 		sprite = Sprite.Create (debugTexture, new Rect (0, 0, debugTexture.width, debugTexture.height), new Vector2 (0.5f, 0.5f));
 		userPicture.overrideSprite = sprite;
+
+		originalUserPicWidth = userPicRect.rect.width;
+		pictureRatio = (userPicRect.rect.height/ userPicRect.rect.width);
 	}
 
 	void OnImageLoad(string imgPath, Texture2D tex) {

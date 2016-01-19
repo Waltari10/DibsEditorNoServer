@@ -23,6 +23,7 @@ public class UIScene : MonoBehaviour {
 	
 	public void UpdateScenario ()
 	{
+
 		if(currentScenarioObj != null)
 			 Destroy(currentScenarioObj);
 		

@@ -43,4 +43,15 @@ public class StateHandler : MonoBehaviour {
 		}
 		
 	}
+
+	public void CropPictureScene ()
+	{
+		//  ladataan skenaario uudestaan vain jos sitä ei ole jo ladattu (ei voi avata samaa uudestaan)
+		if (UIScene.Instance.currentScenario != 4) {
+			UIScene.Instance.currentScenario = 4;
+			Debug.Log (UIScene.Instance.currentScenario);
+			UIScene.Instance.UpdateScenario ();
+		}
+
+	}
 }
