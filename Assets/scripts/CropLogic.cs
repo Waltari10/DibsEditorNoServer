@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using ImageVideoContactPicker;
 
-public class GameLogic : MonoBehaviour {
+public class CropLogic : MonoBehaviour {
 
 
 	public Texture2D debugTexture;
