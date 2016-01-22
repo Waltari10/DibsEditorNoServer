@@ -9,7 +9,6 @@ public class CropLogic : MonoBehaviour {
 	public Texture2D debugTexture;
 
 	private Image sceneImage;
-	private RectTransform sceneImageRect;
 	private Image userPicture;
 	private Button button;
 	private GameObject GO;
@@ -43,7 +42,6 @@ public class CropLogic : MonoBehaviour {
 		pictureBorderRect = GameObject.Find ("PictureBorder").GetComponent<RectTransform> ();
 		button = GameObject.Find ("setPictureButton").GetComponent<Button> ();
 		sceneImage = GameObject.Find ("CamButton").GetComponent<Image> ();
-		sceneImageRect = GameObject.Find ("CamButton").GetComponent<RectTransform> ();
 
 
 		button.onClick.AddListener(() => CropPicture());
@@ -52,9 +50,13 @@ public class CropLogic : MonoBehaviour {
 
 		if (Application.platform == RuntimePlatform.WindowsEditor) {
 			OnImageLoadDebugPC ();
-			FitPicToScreen(debugTexture);
+			FitPicToScreen (debugTexture);
 		} else if (Application.platform == RuntimePlatform.Android) {
-			AndroidPicker.BrowseImage();
+			Debug.Log ("The platform is indeed android");
+			AndroidPicker.BrowseImage ();
+		} else {
+
+			Debug.Log ("The platform is indeed what?");
 		}
 
 	}
