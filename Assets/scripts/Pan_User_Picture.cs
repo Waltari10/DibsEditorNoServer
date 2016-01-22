@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Pan_User_Picture : MonoBehaviour {
 	
-	public RectTransform userPicRect;
-	public RectTransform bord;
+	private RectTransform userPicRect;
+	private RectTransform bord;
 	private float picLeftBorder;
 	private float picBotBorder;
 	private float picRightBorder;
@@ -16,7 +16,13 @@ public class Pan_User_Picture : MonoBehaviour {
 	private Touch touch;
 	private Vector3 newPosition;
 
-
+	
+	void Start() {
+		userPicRect = GameObject.Find ("UserPicture").GetComponent<RectTransform>();
+		bord = GameObject.Find ("PictureBorder").GetComponent<RectTransform> ();	
+		
+	}
+	
 	void Update() {
 		
 		if (Input.touchCount == 1) {
