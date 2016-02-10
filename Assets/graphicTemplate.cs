@@ -16,6 +16,7 @@ public class graphicTemplate : MonoBehaviour {
 		Color vari = new Color(r /255, g /255, b /255);
 		teksti.color = vari;
 		nimi.color = vari;
+
 	}
 	
 	// Update is called once per frame

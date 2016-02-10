@@ -12,7 +12,7 @@ public class getQuote : MonoBehaviour {
 	public void lue() {
 		string teksti = tekstitiedosto.text.ToString();
 		string[] taulukko = teksti.Split ('\n');
-		random = (int)Random.Range(0,100);
+		random = (int)Random.Range(0,95);
 		Debug.Log (random);
 		fieldi = GameObject.Find ("quoteField").GetComponent<InputField>();
 		fieldi.text = taulukko [random];
