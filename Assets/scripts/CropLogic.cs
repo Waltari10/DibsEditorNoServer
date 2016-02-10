@@ -16,7 +16,7 @@ public class CropLogic : MonoBehaviour {
 	private RectTransform pictureBorderRect;
 
 	private float pictureYXRatio;
-
+    private bool pictureLoaded = false;
 	private Texture2D cropThisTex;
 
 	private float distanceChangeTouches;
@@ -36,33 +36,34 @@ public class CropLogic : MonoBehaviour {
 	private float newWidth;
 	private float newHeight;
 
-	void Start () {
+
+
+    void Start () {
         
 		userPicture = GameObject.Find ("UserPicture").GetComponent<Image>();
 		userPicRect = GameObject.Find ("UserPicture").GetComponent<RectTransform>();
 		pictureBorderRect = GameObject.Find ("PictureBorder").GetComponent<RectTransform> ();
 		button = GameObject.Find ("setPictureButton").GetComponent<Button> ();
 		sceneImage = GameObject.Find ("CamButton").GetComponent<Image> ();
-
-
+        
 		button.onClick.AddListener(() => CropPicture());
 
 		fitPictureBorderToScreen ();
 
 		if (Application.platform == RuntimePlatform.WindowsEditor) {
-			OnImageLoadDebugPC ();
+            OnImageLoadDebugPC();
 			FitPicToScreen (debugTexture);
 		} else if (Application.platform == RuntimePlatform.Android) {
 			Debug.Log ("The platform is indeed android");
 			AndroidPicker.BrowseImage ();
 		} else {
 
-			Debug.Log ("The platform is indeed what?");
+			Debug.Log ("The platform is something else");
 		}
 
 	}
 
-	void fitPictureBorderToScreen() {
+    void fitPictureBorderToScreen() {
 		float ratioX = (float) (Screen.width / pictureBorderRect.rect.width);
 		float ratioY = (float)(Screen.height * 0.9) / pictureBorderRect.rect.height;
 
@@ -125,7 +126,7 @@ public class CropLogic : MonoBehaviour {
             UIScene.Instance.UpdateScenario();
         }
 
-        }
+    }
 
 		
 	// Update is called once per frame
@@ -195,6 +196,7 @@ public class CropLogic : MonoBehaviour {
 
 		originalUserPicWidth = userPicRect.rect.width;
 		pictureRatio = (userPicRect.rect.height/ userPicRect.rect.width);
+        pictureLoaded = true;
 	}
 
 	void OnImageLoad(string imgPath, Texture2D tex) {
@@ -206,5 +208,6 @@ public class CropLogic : MonoBehaviour {
 		FitPicToScreen(cropThisTex);
 		originalUserPicWidth = userPicRect.rect.width;
 		pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
-	}
+        pictureLoaded = true;
+    }
 }

@@ -1,4 +1,4 @@
-﻿/*using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using Reign;
@@ -55,4 +55,3 @@ public class readCardPixels : MonoBehaviour {
 
 	}
 }
-*/
