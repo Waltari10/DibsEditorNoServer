@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using Texture2DExtensions;
 using ImageVideoContactPicker;
 
 public class CropLogic : MonoBehaviour {
 
 
 	public Texture2D debugTexture;
-   
 
+    private Button rotateLeftButton;
+    private Button rotateRightButton;
+
+    private Button backButton;
     private Image sceneImage;
 	private Image userPicture;
 	private Button button;
@@ -16,7 +20,6 @@ public class CropLogic : MonoBehaviour {
 	private RectTransform pictureBorderRect;
 
 	private float pictureYXRatio;
-    private bool pictureLoaded = false;
 	private Texture2D cropThisTex;
 
 	private float distanceChangeTouches;
@@ -36,15 +39,63 @@ public class CropLogic : MonoBehaviour {
 	private float newWidth;
 	private float newHeight;
 
+    void rotateRight()
+    {
 
+        cropThisTex.Rotate(-90);
+
+        Sprite sprite = new Sprite();
+        sprite = Sprite.Create(cropThisTex, new Rect(0, 0, cropThisTex.width, cropThisTex.height), new Vector2(0.5f, 0.5f));
+
+        userPicture.overrideSprite = sprite;
+
+        FitPicToScreen(cropThisTex);
+        originalUserPicWidth = userPicRect.rect.width;
+        pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
+    }
+
+    void rotateLeft()
+    {
+        cropThisTex.Rotate(90);
+
+        Sprite sprite = new Sprite();
+        sprite = Sprite.Create(cropThisTex, new Rect(0, 0, cropThisTex.width, cropThisTex.height), new Vector2(0.5f, 0.5f));
+
+        userPicture.overrideSprite = sprite;
+
+        FitPicToScreen(cropThisTex);
+        originalUserPicWidth = userPicRect.rect.width;
+        pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
+    }
+
+
+    void toFontScene()
+    {
+        if (UIScene.Instance.currentScenario != 0)
+        {
+            UIScene.Instance.currentScenario = 0;
+            Debug.Log(UIScene.Instance.currentScenario);
+            UIScene.Instance.UpdateScenario();
+        }
+    }
 
     void Start () {
-        
-		userPicture = GameObject.Find ("UserPicture").GetComponent<Image>();
+
+        rotateLeftButton = GameObject.Find("rotate left").GetComponent<Button>();
+        rotateRightButton = GameObject.Find("rotate right").GetComponent<Button>();
+
+
+        userPicture = GameObject.Find ("UserPicture").GetComponent<Image>();
 		userPicRect = GameObject.Find ("UserPicture").GetComponent<RectTransform>();
 		pictureBorderRect = GameObject.Find ("PictureBorder").GetComponent<RectTransform> ();
 		button = GameObject.Find ("setPictureButton").GetComponent<Button> ();
 		sceneImage = GameObject.Find ("CamButton").GetComponent<Image> ();
+        backButton = GameObject.Find("back").GetComponent<Button>();
+
+        rotateLeftButton.onClick.AddListener(() => rotateLeft());
+        rotateRightButton.onClick.AddListener(() => rotateRight());
+
+        backButton.onClick.AddListener(() => toFontScene());
         
 		button.onClick.AddListener(() => CropPicture());
 
@@ -118,14 +169,7 @@ public class CropLogic : MonoBehaviour {
 		sprite = Sprite.Create (destTex, new Rect (0, 0, width, height), new Vector2 (0.5f, 0.5f));
 		sceneImage.overrideSprite = sprite;
 
-        //	GO.SetActive (false);
-        if (UIScene.Instance.currentScenario != 0)
-        {
-            UIScene.Instance.currentScenario = 0;
-            Debug.Log(UIScene.Instance.currentScenario);
-            UIScene.Instance.UpdateScenario();
-        }
-
+        toFontScene();
     }
 
 		
@@ -166,7 +210,6 @@ public class CropLogic : MonoBehaviour {
 				bordRightBorder = pictureBorderRect.position.x + (pictureBorderRect.rect.width / 2);
 				bordTopBorder = pictureBorderRect.position.y + (pictureBorderRect.rect.height / 2);
 
-				Debug.Log("Bring it DOWN");
 				if (userPicRect.rect.width - distanceChangeTouches * 3 > (originalUserPicWidth/3) && picLeftBorder < bordLeftBorder && picRightBorder > bordRightBorder && picTopBorder > bordTopBorder && picBotBorder < bordBotBorder) {
 					Debug.Log ("trying to make it smaller");
 					userPicRect.sizeDelta = new Vector2 (userPicRect.rect.width - distanceChangeTouches * 3 , userPicRect.rect.height - distanceChangeTouches * 3 * pictureRatio);
@@ -196,7 +239,6 @@ public class CropLogic : MonoBehaviour {
 
 		originalUserPicWidth = userPicRect.rect.width;
 		pictureRatio = (userPicRect.rect.height/ userPicRect.rect.width);
-        pictureLoaded = true;
 	}
 
 	void OnImageLoad(string imgPath, Texture2D tex) {
@@ -208,6 +250,5 @@ public class CropLogic : MonoBehaviour {
 		FitPicToScreen(cropThisTex);
 		originalUserPicWidth = userPicRect.rect.width;
 		pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
-        pictureLoaded = true;
     }
 }
