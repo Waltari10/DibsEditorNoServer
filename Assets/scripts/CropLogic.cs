@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.UI;
 using Texture2DExtensions;
-using ImageVideoContactPicker;
 
 public class CropLogic : MonoBehaviour {
 
@@ -41,8 +40,7 @@ public class CropLogic : MonoBehaviour {
 
     void rotateRight()
     {
-
-        cropThisTex.Rotate(-90);
+        /*cropThisTex.Rotate(-90);
 
         Sprite sprite = new Sprite();
         sprite = Sprite.Create(cropThisTex, new Rect(0, 0, cropThisTex.width, cropThisTex.height), new Vector2(0.5f, 0.5f));
@@ -52,6 +50,7 @@ public class CropLogic : MonoBehaviour {
         FitPicToScreen(cropThisTex);
         originalUserPicWidth = userPicRect.rect.width;
         pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
+        userPicRect.position = new Vector3(Screen.width / 2, Screen.height / 2, 0);*/
     }
 
     void rotateLeft()
@@ -66,6 +65,7 @@ public class CropLogic : MonoBehaviour {
         FitPicToScreen(cropThisTex);
         originalUserPicWidth = userPicRect.rect.width;
         pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
+        userPicRect.position = new Vector3(Screen.width / 2, Screen.height / 2, 0);
     }
 
 
@@ -79,12 +79,19 @@ public class CropLogic : MonoBehaviour {
         }
     }
 
+    void Awake()
+    {
+
+        Debug.Log("AWAKE AWAKE AWAKE AWAKE");
+    }
+
     void Start () {
+        Debug.Log("START START START START START");
+        AndroidCamera.Instance.OnImagePicked += OnImagePicked;
+
 
         rotateLeftButton = GameObject.Find("rotate left").GetComponent<Button>();
         rotateRightButton = GameObject.Find("rotate right").GetComponent<Button>();
-
-
         userPicture = GameObject.Find ("UserPicture").GetComponent<Image>();
 		userPicRect = GameObject.Find ("UserPicture").GetComponent<RectTransform>();
 		pictureBorderRect = GameObject.Find ("PictureBorder").GetComponent<RectTransform> ();
@@ -106,13 +113,38 @@ public class CropLogic : MonoBehaviour {
 			FitPicToScreen (debugTexture);
 		} else if (Application.platform == RuntimePlatform.Android) {
 			Debug.Log ("The platform is indeed android");
-			AndroidPicker.BrowseImage ();
-		} else {
+            AndroidCamera.Instance.GetImageFromGallery();
+
+        } else {
 
 			Debug.Log ("The platform is something else");
 		}
-
 	}
+
+    private void OnImagePicked(AndroidImagePickResult result)
+    {
+        Debug.Log("OnImagePicked");
+        if (result.IsSucceeded)
+        {
+            //image.GetComponent<Renderer>().material.mainTexture = result.Image;
+
+            cropThisTex = new Texture2D(result.Image.width, result.Image.height, result.Image.format, false);
+            cropThisTex.LoadRawTextureData(result.Image.GetRawTextureData()); //Makes the texture readable
+            Sprite sprite = new Sprite();
+            sprite = Sprite.Create(result.Image, new Rect(0, 0, cropThisTex.width, cropThisTex.height), new Vector2(0.5f, 0.5f));
+            userPicture.overrideSprite = sprite;
+            FitPicToScreen(cropThisTex);
+            originalUserPicWidth = userPicRect.rect.width;
+            pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
+        }
+        else {
+            AN_PoupsProxy.showMessage("", "Image wasn't picked :(");
+            toFontScene();
+        }
+
+        AndroidCamera.Instance.OnImagePicked -= OnImagePicked;
+    }
+
 
     void fitPictureBorderToScreen() {
 		float ratioX = (float) (Screen.width / pictureBorderRect.rect.width);
@@ -220,16 +252,6 @@ public class CropLogic : MonoBehaviour {
 
 	}
 
-	void OnEnable() {
-		PickerEventListener.onImageLoad += OnImageLoad;
-
-	}
-
-	void OnDisable() {
-		PickerEventListener.onImageLoad -= OnImageLoad;
-
-	}
-
 	void OnImageLoadDebugPC() {
 		cropThisTex = new Texture2D (debugTexture.width, debugTexture.height, debugTexture.format, false);
 		cropThisTex.LoadRawTextureData(debugTexture.GetRawTextureData ());
@@ -241,7 +263,7 @@ public class CropLogic : MonoBehaviour {
 		pictureRatio = (userPicRect.rect.height/ userPicRect.rect.width);
 	}
 
-	void OnImageLoad(string imgPath, Texture2D tex) {
+	/*void OnImageLoad(string imgPath, Texture2D tex) {
 		cropThisTex = new Texture2D (tex.width, tex.height, tex.format, false);
 		cropThisTex.LoadRawTextureData(tex.GetRawTextureData ()); //Makes the texture readable
 		Sprite sprite = new Sprite ();
@@ -250,5 +272,5 @@ public class CropLogic : MonoBehaviour {
 		FitPicToScreen(cropThisTex);
 		originalUserPicWidth = userPicRect.rect.width;
 		pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
-    }
+    }*/
 }

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using Reign;
 
 public class readCardPixels : MonoBehaviour {
 
@@ -23,7 +22,9 @@ public class readCardPixels : MonoBehaviour {
 
 	public IEnumerator takeShot() {
 
-		yield return new WaitForEndOfFrame ();
+        AndroidCamera.Instance.OnImageSaved += OnImageSaved;
+
+        yield return new WaitForEndOfFrame ();
 
 		int pictureWidth = (int)cardTrans.rect.width;
 		int pictureheight = (int)cardTrans.rect.height;
@@ -34,24 +35,24 @@ public class readCardPixels : MonoBehaviour {
 		Texture2D cardPic = new Texture2D(pictureWidth, pictureheight, TextureFormat.ARGB32, false);
 		cardPic.ReadPixels(new Rect(cropPosX, cropPosY , pictureWidth, pictureheight), 0, 0);  //Crashes everything
 		cardPic.Apply();
-		bytes = cardPic.EncodeToPNG();
-	
-		saveToPictures ();
 
-	}
+        AndroidCamera.Instance.SaveImageToGallery(cardPic);
 
-	private void saveToPictures()
-	{
-		StreamManager.SaveFile("TEST.png", bytes, FolderLocations.Pictures, imageSavedCallback);
-	}
-		
-	private void imageSavedCallback(bool succeeded)
-	{
-		if (succeeded) {
-			MessageBoxManager.Show ("Image Status", "Image saved succesfully!");
-		} else {
-			MessageBoxManager.Show ("Image Status", "Image saving failed!");
-		}
+    }
 
-	}
+
+    void OnImageSaved(GallerySaveResult result)
+    {
+        AndroidCamera.Instance.OnImageSaved -= OnImageSaved;
+        if (result.IsSucceeded)
+        {
+            AN_PoupsProxy.showMessage("", "Image saved to gallery \n" + "Path: " + result.imagePath);
+            
+            Debug.Log("Image saved to gallery \n" + "Path: " + result.imagePath);
+        }
+        else {
+            Debug.Log("Image save to gallery failed");
+            AN_PoupsProxy.showMessage("", "Something went wrong :(");
+        }
+    }
 }
