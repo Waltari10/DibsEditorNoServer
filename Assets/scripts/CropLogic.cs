@@ -40,7 +40,7 @@ public class CropLogic : MonoBehaviour {
 
     void rotateRight()
     {
-        /*cropThisTex.Rotate(-90);
+        cropThisTex.Rotate(-90);
 
         Sprite sprite = new Sprite();
         sprite = Sprite.Create(cropThisTex, new Rect(0, 0, cropThisTex.width, cropThisTex.height), new Vector2(0.5f, 0.5f));
@@ -50,7 +50,7 @@ public class CropLogic : MonoBehaviour {
         FitPicToScreen(cropThisTex);
         originalUserPicWidth = userPicRect.rect.width;
         pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
-        userPicRect.position = new Vector3(Screen.width / 2, Screen.height / 2, 0);*/
+        userPicRect.position = new Vector3(Screen.width / 2, Screen.height / 2, 0);
     }
 
     void rotateLeft()
@@ -79,16 +79,9 @@ public class CropLogic : MonoBehaviour {
         }
     }
 
-    void Awake()
-    {
-
-        Debug.Log("AWAKE AWAKE AWAKE AWAKE");
-    }
 
     void Start () {
-        Debug.Log("START START START START START");
         AndroidCamera.Instance.OnImagePicked += OnImagePicked;
-
 
         rotateLeftButton = GameObject.Find("rotate left").GetComponent<Button>();
         rotateRightButton = GameObject.Find("rotate right").GetComponent<Button>();
@@ -151,11 +144,9 @@ public class CropLogic : MonoBehaviour {
 		float ratioY = (float)(Screen.height * 0.9) / pictureBorderRect.rect.height;
 
 		if (ratioX < ratioY) {			//Width Restricts
-			//Debug.Log ("fitPictureBorder ratioX < ratioY Width Restricts");
 			width2 = (float) (Screen.width * 0.9);
 			height2 = (width2 * pictureBorderRect.rect.height) / pictureBorderRect.rect.width;
 		} else if (ratioX > ratioY){	//Height restricts
-			//Debug.Log ("fitPictureBorder ratioX > ratioY Height restricts");
 			height2 = (float) (Screen.height * 0.9);
 			width2 = (pictureBorderRect.rect.width * height2) / pictureBorderRect.rect.height;
 		} 
@@ -173,9 +164,7 @@ public class CropLogic : MonoBehaviour {
 		} else if (ratioX > ratioY){
 			float pictureWidth = (float)((pictureBorderRect.rect.width) * rawTexture.height)/rawTexture.width;
 			userPicRect.sizeDelta = new Vector2((float)(pictureBorderRect.rect.width), pictureWidth);
-		} else if (ratioX == ratioY) {
-			Debug.Log ("picture ratioX == ratioY");
-		}
+		} 
 	}
 
 	public void CropPicture() {	//called when set picture is pressed
@@ -224,7 +213,6 @@ public class CropLogic : MonoBehaviour {
 
 			if (TouchedPointsDistance > TouchedPointsDistanceLastTime) {
 				if (userPicRect.rect.width + distanceChangeTouches * 3 < (originalUserPicWidth * 3)) {
-					Debug.Log ("trying to make it bigger");
 					userPicRect.sizeDelta = new Vector2 (userPicRect.rect.width + distanceChangeTouches * 3, userPicRect.rect.height + distanceChangeTouches * 3 * pictureRatio); 
 				} 
 			} else if (TouchedPointsDistance < TouchedPointsDistanceLastTime) {
@@ -243,7 +231,6 @@ public class CropLogic : MonoBehaviour {
 				bordTopBorder = pictureBorderRect.position.y + (pictureBorderRect.rect.height / 2);
 
 				if (userPicRect.rect.width - distanceChangeTouches * 3 > (originalUserPicWidth/3) && picLeftBorder < bordLeftBorder && picRightBorder > bordRightBorder && picTopBorder > bordTopBorder && picBotBorder < bordBotBorder) {
-					Debug.Log ("trying to make it smaller");
 					userPicRect.sizeDelta = new Vector2 (userPicRect.rect.width - distanceChangeTouches * 3 , userPicRect.rect.height - distanceChangeTouches * 3 * pictureRatio);
 				}
 			} 
@@ -262,15 +249,4 @@ public class CropLogic : MonoBehaviour {
 		originalUserPicWidth = userPicRect.rect.width;
 		pictureRatio = (userPicRect.rect.height/ userPicRect.rect.width);
 	}
-
-	/*void OnImageLoad(string imgPath, Texture2D tex) {
-		cropThisTex = new Texture2D (tex.width, tex.height, tex.format, false);
-		cropThisTex.LoadRawTextureData(tex.GetRawTextureData ()); //Makes the texture readable
-		Sprite sprite = new Sprite ();
-		sprite = Sprite.Create (tex, new Rect (0, 0, cropThisTex.width, cropThisTex.height), new Vector2 (0.5f, 0.5f));
-		userPicture.overrideSprite = sprite;
-		FitPicToScreen(cropThisTex);
-		originalUserPicWidth = userPicRect.rect.width;
-		pictureRatio = (userPicRect.rect.height / userPicRect.rect.width);
-    }*/
 }
